@@ -1,20 +1,44 @@
 import { useFormik, Field, Formik, Form } from 'formik';
+import * as Yup from 'yup';
 function Signup() {
-  const signupSchema = {};
+  const signupSchema = Yup.object({
+    userName: Yup.string()
+      .uppercase('User name should be start with capital letter')
+      .min(4, 'User name aleast 4 character')
+      .max(15, 'User name should not be greater than 14 chracter')
+      .required('User name shuld not be blank'),
+    email: Yup.string()
+      .email('Invalid email')
+      .required('Email should not be empty'),
+    password: Yup.string()
+      .required('Password is required field')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/\d/, 'Passowrd must contain at least one nuber')
+      .matches(
+        /[@!#$%&]/,
+        'Passowrd must contain at least one special character'
+      )
+      .min(8, 'Passord must be at least 8 character'),
+    confirm_password: Yup.string()
+      .required('Conform is required field')
+      .oneOf([Yup.ref('password')], "Your password does't match"),
+  });
   const initialState = {
     userName: '',
     email: '',
     password: '',
     confirm_password: '',
   };
-  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: initialState,
-    // validate: signupSchema,
-    onSubmit: (value, { resetForm }) => {
-      console.log(value);
-      resetForm();
-    },
-  });
+  const { values, errors, handleBlur, touched, handleChange, handleSubmit } =
+    useFormik({
+      initialValues: initialState,
+      validationSchema: signupSchema,
+      onSubmit: (value, { resetForm }) => {
+        console.log(value);
+        resetForm();
+      },
+    });
 
   return (
     <div className="w-[40%] flex justify-center items-center">
@@ -34,7 +58,11 @@ function Signup() {
                 placeholder=" User Name"
                 className="bg-[#FFF] outline-none focus:ring-rose-100 p-2 rounded-lg w-full"
               />
-              {errors.userName && <div>{errors.userName}</div>}
+              {errors.userName && touched.userName && (
+                <div className="text-red-600 ml-3 text-sm">
+                  {errors.userName}
+                </div>
+              )}
             </div>
             <div>
               <Field
@@ -47,7 +75,9 @@ function Signup() {
                 placeholder="Email Id"
                 className="bg-[#FFF] outline-none focus:ring-rose-100 p-2 rounded-lg w-full"
               />
-              {errors.email && <div>{errors.email}</div>}
+              {errors.email && touched.email && (
+                <div className="text-red-600 ml-3 text-sm">{errors.email}</div>
+              )}
             </div>
             <div>
               <Field
@@ -60,7 +90,11 @@ function Signup() {
                 placeholder="Password"
                 className="bg-[#FFF] outline-none focus:ring-rose-100 p-2 rounded-lg w-full"
               />
-              {errors.password && <div>{errors.password}</div>}
+              {errors.password && touched.password && (
+                <div className="text-red-600 ml-3 text-sm">
+                  {errors.password}
+                </div>
+              )}
             </div>
             <div>
               <Field
@@ -73,7 +107,11 @@ function Signup() {
                 placeholder="Confirm Password"
                 className="bg-[#FFF] outline-none focus:ring-rose-100 p-2 rounded-lg w-full"
               />
-              {errors.confirm_password && <div>{errors.confirm_password}</div>}
+              {errors.confirm_password && touched.confirm_password && (
+                <div className="text-red-600 ml-3 text-sm">
+                  {errors.confirm_password}
+                </div>
+              )}
             </div>
           </div>
           <button
