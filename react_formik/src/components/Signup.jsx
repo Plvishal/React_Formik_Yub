@@ -3,7 +3,10 @@ import * as Yup from 'yup';
 function Signup() {
   const signupSchema = Yup.object({
     userName: Yup.string()
-      .uppercase('User name should be start with capital letter')
+      .matches(
+        /^[A-Z][a-zA-Z]*$/,
+        'User name should be start with capital letter'
+      )
       .min(4, 'User name aleast 4 character')
       .max(15, 'User name should not be greater than 14 chracter')
       .required('User name shuld not be blank'),
