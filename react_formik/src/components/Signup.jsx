@@ -10,8 +10,9 @@ function Signup() {
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: initialState,
     // validate: signupSchema,
-    onSubmit: (value) => {
+    onSubmit: (value, { resetForm }) => {
       console.log(value);
+      resetForm();
     },
   });
 
