@@ -4,7 +4,7 @@ function Signup() {
   const signupSchema = Yup.object({
     userName: Yup.string()
       .matches(
-        /^[A-Z][a-zA-Z]*$/,
+        /^[A-Z][a-z]*(?: [A-Z][a-z]*)*$/,
         'User name should be start with capital letter'
       )
       .min(4, 'User name aleast 4 character')
